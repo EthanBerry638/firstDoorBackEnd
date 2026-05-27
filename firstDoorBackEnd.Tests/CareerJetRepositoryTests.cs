@@ -204,7 +204,7 @@ namespace firstDoorBackEnd.Tests
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage
                 {
-                    StatusCode = System.Net.HttpStatusCode.NotFound
+                    StatusCode = System.Net.HttpStatusCode.Forbidden
                 });
 
             var client = new HttpClient(mockHttpMessageHandler.Object)

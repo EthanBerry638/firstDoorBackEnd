@@ -36,6 +36,11 @@ namespace firstDoorBackEnd.Repositories
                     throw new CareerJetBadRequestException(errorDetails?.message!);
                 }
 
+                if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    throw new CareerJetForbiddenException("The API key or credentials provided are invalid");
+                }
+
                 return null;
         //}
         //    catch (Exception)
