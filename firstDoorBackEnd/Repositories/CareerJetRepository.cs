@@ -11,7 +11,7 @@ namespace firstDoorBackEnd.Repositories
             _httpClient = httpClient;
         }
 
-        public async Task<List<Job>>? GetJobsAsync(string userIp, string userAgent)
+        public async Task<List<Job>>? GetAllJobsAsync(string userIp, string userAgent)
         {
             try
             {
