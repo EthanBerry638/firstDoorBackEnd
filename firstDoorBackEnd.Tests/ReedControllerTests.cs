@@ -24,6 +24,8 @@ public class ReedControllerTests
     [Test]
     public async Task GetJobsAsync_ShouldReturnOk()
     {
+        //Arrange
+        
         var testJobs = new List<Job>
             {
             new Job
@@ -53,19 +55,18 @@ public class ReedControllerTests
             "https://example.com/job3"
             )
         };
-        _reedServiceMock.Setup(r => r.GetJobsAsync())
+        
+        _reedServiceMock
+        .Setup(r => r.GetJobsAsync())
         .ReturnsAsync(testJobs);
 
-        Act
+        //Act
 
-       var result =
+        var result = await _reedController.GetJobsAsync();
 
-       await _reedController.GetJobsAsync();
+        //Assert
 
-        Assert
-
-       var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-
+        var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
         var value = okResult.Value as List<Job>;
 
         value.Should().NotBeNull();
