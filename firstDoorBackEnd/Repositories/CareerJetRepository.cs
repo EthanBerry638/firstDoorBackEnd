@@ -14,10 +14,10 @@ namespace firstDoorBackEnd.Repositories
 
         public async Task<List<Job>> GetAllJobsAsync(string userIp, string userAgent)
         {
-            string query = $"?keywords={Uri.EscapeDataString("junior software")}" +
-                               $"&location={Uri.EscapeDataString("london")}" +
-                               $"&user_ip={Uri.EscapeDataString(userIp)}" +
-                               $"&user_agent={Uri.EscapeDataString(userAgent)}";
+            string query = $"v4/query?keywords={Uri.EscapeDataString("junior software")}" +
+                           $"&location={Uri.EscapeDataString("london")}" +
+                           $"&user_ip={Uri.EscapeDataString(userIp)}" +
+                           $"&user_agent={Uri.EscapeDataString(userAgent)}";
 
             HttpResponseMessage response = await _httpClient.GetAsync(query);
 
