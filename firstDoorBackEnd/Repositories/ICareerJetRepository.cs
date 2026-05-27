@@ -4,6 +4,6 @@ namespace firstDoorBackEnd.Repositories
 {
     public interface ICareerJetRepository
     {
-        Task<List<Job>>? GetJobs();
+        Task<List<Job>>? GetJobsAsync();
     }
 }
