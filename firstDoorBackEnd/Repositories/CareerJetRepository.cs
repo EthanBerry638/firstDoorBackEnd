@@ -20,9 +20,9 @@ namespace firstDoorBackEnd.Repositories
                                $"&user_ip={Uri.EscapeDataString(userIp)}" +
                                $"&user_agent={Uri.EscapeDataString(userAgent)}";
 
-                var jobs = await _httpClient.GetFromJsonAsync<List<Job>>("search");
+                var response = await _httpClient.GetFromJsonAsync<CareerJetResponse>(query);
 
-                return jobs ?? new List<Job>();
+                return response?.Jobs ?? new List<Job>();
             }
             catch (Exception)
             {
