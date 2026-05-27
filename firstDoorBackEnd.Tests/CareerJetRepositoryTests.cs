@@ -25,6 +25,7 @@ namespace firstDoorBackEnd.Tests
                     (
                         "JOBS",
                         1,
+                        "1 job found",
                         1,
                         new List<Job> { new("software engineer", "microsoft", "london", ".NET developer", "test url") }
                     ))
@@ -60,6 +61,7 @@ namespace firstDoorBackEnd.Tests
                     (
                         "JOBS",
                         1,
+                        "1 job found",
                         1,
                         new List<Job>()
                     ))
@@ -95,6 +97,7 @@ namespace firstDoorBackEnd.Tests
                     (
                         "JOBS",
                         1,
+                        "1 job found",
                         1,
                         null!
                     ))

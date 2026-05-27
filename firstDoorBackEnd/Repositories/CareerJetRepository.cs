@@ -22,7 +22,7 @@ namespace firstDoorBackEnd.Repositories
 
                 var response = await _httpClient.GetFromJsonAsync<CareerJetResponse>(query);
 
-                return response?.Jobs ?? new List<Job>();
+                return response?.jobs ?? new List<Job>();
             }
             catch (Exception)
             {
