@@ -13,7 +13,7 @@ namespace firstDoorBackEnd.Repositories
 
         public Task<List<Job>>? GetJobsAsync()
         {
-            return null;
+            return Task.FromResult(new List<Job>());
         }
     }
 }
