@@ -39,39 +39,45 @@ namespace firstDoorBackEnd.Tests
 
             _careerJetRepository = new CareerJetRepository(client);
 
-            var result = await _careerJetRepository.GetJobsAsync("129.0.0.1", "Mozilla/5.0");
+            var result = await _careerJetRepository.GetAllJobsAsync("129.0.0.1", "Mozilla/5.0");
 
             Assert.NotNull(result);
             Assert.AreEqual(1, result.Count());
         }
 
-        //[Test]
-        //public async Task GetJobsAsync_ShouldReturnEmptyListOfJobs_WhenExternalAPIReturnsOkButNoJobs()
-        //{
-        //    var mockFactory = new Mock<IHttpClientFactory>();
+        [Test]
+        public async Task GetJobsAsync_ShouldReturnEmptyListOfJobs_WhenExternalAPIReturnsOkButNoJobs()
+        {
+            var mockFactory = new Mock<IHttpClientFactory>();
 
-        //    var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
-        //    mockHttpMessageHandler.Protected()
-        //        .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-        //        .ReturnsAsync(new HttpResponseMessage
-        //        {
-        //            StatusCode = System.Net.HttpStatusCode.OK,
-        //            Content = JsonContent.Create(new List<Job>())
-        //        });
+            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
+            mockHttpMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = System.Net.HttpStatusCode.OK,
+                    Content = JsonContent.Create(new CareerJetResponse
+                    (
+                        "JOBS",
+                        1,
+                        1,
+                        new List<Job>()
+                    ))
+                });
 
-        //    var client = new HttpClient(mockHttpMessageHandler.Object)
-        //    {
-        //        BaseAddress = new Uri("https://careerjet.com")
-        //    };
+            var client = new HttpClient(mockHttpMessageHandler.Object)
+            {
+                BaseAddress = new Uri("https://careerjet.com")
+            };
 
-        //    mockFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(client);
+            mockFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(client);
 
-        //    _careerJetRepository = new CareerJetRepository(client);
+            _careerJetRepository = new CareerJetRepository(client);
 
-        //    var result = await _careerJetRepository.GetJobsAsync();
+            var result = await _careerJetRepository.GetAllJobsAsync("129.0.0.1", "Mozilla/5.0");
 
-        //    Assert.NotNull(result);
-        //    Assert.AreEqual(0, result.Count());
-        //}
+            Assert.NotNull(result);
+            Assert.AreEqual(0, result.Count());
+        }
     }
 }
