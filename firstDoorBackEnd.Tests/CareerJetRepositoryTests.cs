@@ -1,6 +1,8 @@
 ﻿using firstDoorBackEnd.Repositories;
 using Moq;
 using Moq.Protected;
+using System.Net.Http.Json;
+using firstDoorBackEnd.Models;
 
 namespace firstDoorBackEnd.Tests
 {
@@ -18,10 +20,17 @@ namespace firstDoorBackEnd.Tests
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage
                 {
-                    StatusCode = System.Net.HttpStatusCode.OK
+                    StatusCode = System.Net.HttpStatusCode.OK,
+                    Content = JsonContent.Create(new List<Job>
+                    {
+                        new("software engineer", "microsoft", "london", ".NET developer", "test url")
+                    })
                 });
 
-            var client = new HttpClient(mockHttpMessageHanlder.Object);
+            var client = new HttpClient(mockHttpMessageHanlder.Object)
+            {
+                BaseAddress = new Uri("https://careerjet.com")
+            };
         }
     }
 }
