@@ -117,5 +117,43 @@ namespace firstDoorBackEnd.Tests
             Assert.NotNull(result);
             Assert.AreEqual(0, result.Count());
         }
+
+        [Test]
+        public async Task GetAllJobsAsync_ShouldThrowCareerJetBadRequestException_WhenExternalAPIReturnsOkButJobsIsNull()
+        {
+            var mockFactory = new Mock<IHttpClientFactory>();
+
+            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
+            mockHttpMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    Content = JsonContent.Create(new CareerJetResponse
+                    (
+                        "JOBS",
+                        1,
+                        "Unsupported locale code",
+                        1,
+                        null!
+                    ))
+                });
+
+            var client = new HttpClient(mockHttpMessageHandler.Object)
+            {
+                BaseAddress = new Uri("https://careerjet.com")
+            };
+
+            mockFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(client);
+
+            _careerJetRepository = new CareerJetRepository(client);
+
+            var exception = Assert.ThrowsAsync<CareerJetBadRequestException>(async () =>
+            {
+                await _careerJetRepository.GetAllJobsAsync("129.0.0.1", "Mozilla/5.0");
+            });
+
+            Assert.That(exception.Message, Does.Contain("Unsupported locale code"));
+        }
     }
 }
