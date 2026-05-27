@@ -17,7 +17,7 @@ namespace firstDoorBackEnd.Repositories
             {
                 var jobs = await _httpClient.GetFromJsonAsync<List<Job>>("search");
 
-                return jobs ?? new List<Job>();
+                return jobs;
             }
             catch (Exception)
             {
