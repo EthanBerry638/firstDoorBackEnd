@@ -10,9 +10,9 @@ namespace firstDoorBackEnd.Controllers
     [Route("api/[controller]")]
     public class ReedController : ControllerBase
     {
-        private readonly ReedService _reedService;
+        private readonly IReedService _reedService;
 
-        public ReedController(ReedService reedService)
+        public ReedController(IReedService reedService)
         {
             _reedService = reedService;
         }
