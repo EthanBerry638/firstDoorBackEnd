@@ -6,7 +6,15 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddHttpClient<ICareerJetRepository, CareerJetRepository>(client =>
 {
-    client.BaseAddress = new Uri("https://placeholder.com");
+    client.BaseAddress = new Uri("https://search.api.careerjet.net/");
+
+    string apiKey = builder.Configuration["CareerJet:ApiKey"] ?? string.Empty;
+    string authenticationString = $"{apiKey}:";
+
+    byte[] binaryData = System.Text.Encoding.UTF8.GetBytes(authenticationString);
+    string base64Credentials = Convert.ToBase64String(binaryData);
+
+    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", base64Credentials);
 });
 
 builder.Services.AddEndpointsApiExplorer();
