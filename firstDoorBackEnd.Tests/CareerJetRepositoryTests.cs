@@ -31,6 +31,15 @@ namespace firstDoorBackEnd.Tests
             {
                 BaseAddress = new Uri("https://careerjet.com")
             };
+
+            mockFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(client);
+
+            _careerJetRepository = new CareerJetRepository(client);
+
+            var result = await _careerJetRepository.GetJobsAsync();
+
+            Assert.NotNull(result);
+            Assert.AreEqual(1, result.Count());
         }
     }
 }
