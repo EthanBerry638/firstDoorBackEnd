@@ -15,7 +15,10 @@ namespace firstDoorBackEnd.Repositories
         {
             try
             {
-                
+                string query = $"?keywords={Uri.EscapeDataString("junior software")}" +
+                               $"&location={Uri.EscapeDataString("london")}" +
+                               $"&user_ip={Uri.EscapeDataString(userIp)}" +
+                               $"&user_agent={Uri.EscapeDataString(userAgent)}";
 
                 var jobs = await _httpClient.GetFromJsonAsync<List<Job>>("search");
 
