@@ -73,5 +73,9 @@ public class ReedControllerTests
         value.Should().NotBeNull();
 
         value.Should().BeEquivalentTo(testJobs);
+
+        value.Should().HaveCount(3);
+        value![0].Title
+        .Should().Be("Junior .NET Developer");
     }
 }

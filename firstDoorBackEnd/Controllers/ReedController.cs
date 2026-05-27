@@ -21,11 +21,8 @@ namespace firstDoorBackEnd.Controllers
         [HttpGet]
 
         public async Task<IActionResult> GetJobsAsync()
-
         {
-
             var jobs = await _reedService.GetJobsAsync();
-
             return Ok(jobs);
 
         }
