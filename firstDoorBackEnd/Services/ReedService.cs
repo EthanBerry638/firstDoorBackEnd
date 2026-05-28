@@ -1,8 +1,5 @@
 ﻿using firstDoorBackEnd.Models;
-using firstDoorBackEnd.Repositories;
-using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text.Json;
 namespace firstDoorBackEnd.Services
 {
     public class ReedService : IReedService
