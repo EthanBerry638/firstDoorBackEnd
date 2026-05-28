@@ -1,16 +1,26 @@
-﻿namespace firstDoorBackEnd.Tests;
+﻿using firstDoorBackEnd.Models;
+using firstDoorBackEnd.Controllers;
+using firstDoorBackEnd.Services;
+using Moq;
+using NUnit.Framework;
+namespace firstDoorBackEnd.Tests;
 
 public class CareerJetControllerTests
 {
-    [SetUp]
-    public void Setup()
-    {
-
-    }
+    private CareerJetController _careerJetController;
 
     [Test]
-    public void Test1()
+    public async Task GetAllJobsAsync_CallsGetAllJobsAsyncFromService()
     {
-        Assert.Pass();
+        var mockCareerJetService = new Mock<ICareerJetService>();
+        var jobs = new List<Job>();
+
+        mockCareerJetService.Setup(s => s.GetAllJobsAsync()).ReturnsAsync(jobs);
+
+        var controller = new CareerJetController(mockCareerJetService.Object);
+
+        var result = await controller.GetAllJobsAsync();
+
+        mockCareerJetService.Verify(s => s.GetAllJobsAsync(), Times.Once);
     }
 }
