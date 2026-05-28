@@ -31,7 +31,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHealthChecks()
     .AddUrlGroup(
-        uri: new Uri("https://search.api.careerjet.net/v4/query"),
+        uri: new Uri($"https://search.api.careerjet.net/v4/query?user_ip={Uri.EscapeDataString("82.165.195.101")}&user_agent={Uri.EscapeDataString("Mozilla")}"),
         name: "careerjet-api",
         failureStatus: HealthStatus.Degraded,
         tags: ["external"],
