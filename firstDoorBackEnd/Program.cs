@@ -1,5 +1,6 @@
 using firstDoorBackEnd.Repositories;
 using firstDoorBackEnd.Middleware;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,11 +29,20 @@ builder.Services.AddHttpClient<ICareerJetRepository, CareerJetRepository>(client
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHealthChecks()
+    .AddUrlGroup(
+        uri: new Uri("https://search.api.careerjet.net/v4/query"),
+        name: "careerjet-api",
+        failureStatus: HealthStatus.Degraded,
+        tags: ["external"]);
+
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.MapHealthChecks("/health");
 
 if (app.Environment.IsDevelopment())
 {
