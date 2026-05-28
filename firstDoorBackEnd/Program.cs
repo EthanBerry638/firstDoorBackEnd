@@ -1,4 +1,5 @@
 using firstDoorBackEnd.Repositories;
+using firstDoorBackEnd.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
