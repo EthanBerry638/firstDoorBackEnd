@@ -54,32 +54,18 @@ namespace firstDoorBackEnd.Tests
         [Test]
         public async Task GetAllJobsAsync_ShouldReturnEmptyListOfJobs_WhenExternalAPIReturnsOkButNoJobs()
         {
-            var mockFactory = new Mock<IHttpClientFactory>();
+            var mockResponse = new CareerJetResponse
+            (
+                "JOBS", 1, "1 job found", 1, new List<Job>()
+            );
 
-            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
-            mockHttpMessageHandler.Protected()
+            _mockHttpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
-                    Content = JsonContent.Create(new CareerJetResponse
-                    (
-                        "JOBS",
-                        1,
-                        "1 job found",
-                        1,
-                        new List<Job>()
-                    ))
+                    Content = JsonContent.Create(mockResponse)
                 });
-
-            var client = new HttpClient(mockHttpMessageHandler.Object)
-            {
-                BaseAddress = new Uri("https://careerjet.com")
-            };
-
-            mockFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(client);
-
-            _careerJetRepository = new CareerJetRepository(client);
 
             var result = await _careerJetRepository.GetAllJobsAsync("129.0.0.1", "Mozilla/5.0");
 
@@ -90,32 +76,18 @@ namespace firstDoorBackEnd.Tests
         [Test]
         public async Task GetAllJobsAsync_ShouldReturnEmptyListOfJobs_WhenExternalAPIReturnsOkButJobsAreNull()
         {
-            var mockFactory = new Mock<IHttpClientFactory>();
+            var mockResponse = new CareerJetResponse
+            (
+                 "JOBS", 1, "1 job found", 1, null!
+            );
 
-            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
-            mockHttpMessageHandler.Protected()
+            _mockHttpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
-                    Content = JsonContent.Create(new CareerJetResponse
-                    (
-                        "JOBS",
-                        1,
-                        "1 job found",
-                        1,
-                        null!
-                    ))
+                    Content = JsonContent.Create(mockResponse)
                 });
-
-            var client = new HttpClient(mockHttpMessageHandler.Object)
-            {
-                BaseAddress = new Uri("https://careerjet.com")
-            };
-
-            mockFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(client);
-
-            _careerJetRepository = new CareerJetRepository(client);
 
             var result = await _careerJetRepository.GetAllJobsAsync("129.0.0.1", "Mozilla/5.0");
 
@@ -126,32 +98,18 @@ namespace firstDoorBackEnd.Tests
         [Test]
         public void GetAllJobsAsync_ShouldThrowCareerJetBadRequestException_WhenExternalAPIReturnsBadRequest()
         {
-            var mockFactory = new Mock<IHttpClientFactory>();
+            var mockResponse = new CareerJetResponse
+            (
+                "JOBS", 1, "Unsupported locale code", 1, null!
+            );
 
-            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
-            mockHttpMessageHandler.Protected()
+            _mockHttpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage
                 {
                     StatusCode = System.Net.HttpStatusCode.BadRequest,
-                    Content = JsonContent.Create(new CareerJetResponse
-                    (
-                        "JOBS",
-                        1,
-                        "Unsupported locale code",
-                        1,
-                        null!
-                    ))
+                    Content = JsonContent.Create(mockResponse)
                 });
-
-            var client = new HttpClient(mockHttpMessageHandler.Object)
-            {
-                BaseAddress = new Uri("https://careerjet.com")
-            };
-
-            mockFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(client);
-
-            _careerJetRepository = new CareerJetRepository(client);
 
             var exception = Assert.ThrowsAsync<CareerJetBadRequestException>(async () =>
             {
@@ -165,32 +123,18 @@ namespace firstDoorBackEnd.Tests
         [TestCase("no matching location found")]
         public async Task GetAllJobsAsync_ShouldReturnEmptyListOfJobs_WhenExternalAPIReturnsOkButTypeIsLocation(string message)
         {
-            var mockFactory = new Mock<IHttpClientFactory>();
+            var mockResponse = new CareerJetResponse
+            (
+                "LOCATIONS", 1, message, 1, null!
+            );
 
-            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
-            mockHttpMessageHandler.Protected()
+            _mockHttpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
-                    Content = JsonContent.Create(new CareerJetResponse
-                    (
-                        "LOCATIONS",
-                        1,
-                        message,
-                        1,
-                        null!
-                    ))
+                    Content = JsonContent.Create(mockResponse)
                 });
-
-            var client = new HttpClient(mockHttpMessageHandler.Object)
-            {
-                BaseAddress = new Uri("https://careerjet.com")
-            };
-
-            mockFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(client);
-
-            _careerJetRepository = new CareerJetRepository(client);
 
             var result = await _careerJetRepository.GetAllJobsAsync("129.0.0.1", "Mozilla/5.0");
 
@@ -201,24 +145,12 @@ namespace firstDoorBackEnd.Tests
         [Test]
         public void GetAllJobsAsync_ShouldThrowCareerJetForbiddenException_WhenExternalAPIReturnsForbidden()
         {
-            var mockFactory = new Mock<IHttpClientFactory>();
-
-            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
-            mockHttpMessageHandler.Protected()
+            _mockHttpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage
                 {
                     StatusCode = System.Net.HttpStatusCode.Forbidden
                 });
-
-            var client = new HttpClient(mockHttpMessageHandler.Object)
-            {
-                BaseAddress = new Uri("https://careerjet.com")
-            };
-
-            mockFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(client);
-
-            _careerJetRepository = new CareerJetRepository(client);
 
             var exception = Assert.ThrowsAsync<CareerJetForbiddenException>(async () =>
             {
@@ -233,24 +165,12 @@ namespace firstDoorBackEnd.Tests
         [TestCase(System.Net.HttpStatusCode.ServiceUnavailable)]
         public async Task GetAllJobsAsync_ShouldReturnEmptyList_WhenExternalAPIReturnsAnOndcoumentedFailureStatusCode(System.Net.HttpStatusCode httpStatusCode)
         {
-            var mockFactory = new Mock<IHttpClientFactory>();
-
-            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
-            mockHttpMessageHandler.Protected()
+            _mockHttpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage
                 {
                     StatusCode = httpStatusCode
                 });
-
-            var client = new HttpClient(mockHttpMessageHandler.Object)
-            {
-                BaseAddress = new Uri("https://careerjet.com")
-            };
-
-            mockFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(client);
-
-            _careerJetRepository = new CareerJetRepository(client);
 
             var result = await _careerJetRepository.GetAllJobsAsync("129.0.0.1", "Mozilla/5.0");
 
