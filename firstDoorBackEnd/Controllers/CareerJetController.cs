@@ -21,5 +21,13 @@ namespace firstDoorBackEnd.Controllers
            var jobs = await _careerJetService.GetAllJobsAsync(userIp,userAgent);
            return Ok(jobs);
         }
+
+        public (string, string) GetUserIPAndUserAgent()
+        {
+            string userIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
+            string userAgent = HttpContext.Request.Headers.UserAgent.ToString() ?? string.Empty;
+
+            return (userIp, userAgent);
+        }
     }
 }
