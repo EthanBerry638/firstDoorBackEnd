@@ -1,4 +1,6 @@
-﻿namespace firstDoorBackEnd.Middleware
+﻿using firstDoorBackEnd.Exceptions;
+
+namespace firstDoorBackEnd.Middleware
 {
     public class ExceptionHandlingMiddleware : IMiddleware
     {
@@ -10,7 +12,7 @@
             }
             catch (CareerJetForbiddenException ex)
             {
-                HandleCareerJetForbiddenException(context, ex);
+                await HandleCareerJetForbiddenException(context, ex);
             }
         }
 
