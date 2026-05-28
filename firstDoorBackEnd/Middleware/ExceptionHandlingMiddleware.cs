@@ -10,16 +10,26 @@ namespace firstDoorBackEnd.Middleware
             {
                 await next.Invoke(context);
             }
+            catch (CareerJetBadRequestException ex)
+            {
+                await HandleCareerJetBadRequestException(context, ex);
+            }
             catch (CareerJetForbiddenException ex)
             {
                 await HandleCareerJetForbiddenException(context, ex);
             }
         }
 
+        private async Task HandleCareerJetBadRequestException(HttpContext context, Exception ex)
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            await context.Response.WriteAsJsonAsync(ex.Message);
+        }
+
         private async Task HandleCareerJetForbiddenException(HttpContext context, Exception ex)
         {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
-            await context.Response.WriteAsJsonAsync(new { ex.Message });
+            await context.Response.WriteAsJsonAsync(ex.Message);
         }
     }
 }
