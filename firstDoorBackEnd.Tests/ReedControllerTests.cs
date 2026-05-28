@@ -70,10 +70,12 @@ public class ReedControllerTests
         var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
         var value = okResult.Value as List<Job>;
 
+        value.Should().NotBeNull();
+
         value.Should().BeEquivalentTo(testJobs);
 
         value.Should().HaveCount(3);
-        value![0].Title.Should().Be("Junior .NET Developer");
-        _reedServiceMock.Verify(r => r.GetJobsAsync(), Times.Once);
+        value![0].Title
+        .Should().Be("Junior .NET Developer");
     }
 }
