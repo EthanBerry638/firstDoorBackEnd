@@ -1,8 +1,20 @@
-﻿using firstDoorBackEnd.Services;
+﻿using firstDoorBackEnd.Models;
+using firstDoorBackEnd.Repositories;
 
-namespace firstDoorBackEnd.Service
+namespace firstDoorBackEnd.Services;
+
+public class CareerJetService : ICareerJetService
 {
-    public class CareerJetService : ICareerJetService
+    private readonly ICareerJetRepository _careerJetRepository;
+
+    public CareerJetService(ICareerJetRepository careerJetRepository)
     {
+        _careerJetRepository = careerJetRepository;
     }
+
+    public async Task<List<Job>> GetAllJobsAsync(string userIp, string userAgent)
+    {
+        return await Task.FromResult(new List<Job>());
+    }
+
 }
