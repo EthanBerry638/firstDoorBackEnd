@@ -1,52 +1,23 @@
 ﻿using firstDoorBackEnd.Models;
+using firstDoorBackEnd.Repositories;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text.Json;
 namespace firstDoorBackEnd.Services
 {
     public class ReedService : IReedService
     {
-        private readonly HttpClient _httpClient;
-        public ReedService(HttpClient httpClient, IConfiguration config)
+        private readonly IReedRepository _repository;
+
+        public ReedService(IReedRepository repository)
         {
-            _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri("https://www.reed.co.uk/api/1.0/");
-
-            var apiKey = config["ReedApiKey"];
-
-            var authValue = Convert.ToBase64String(
-                System.Text.Encoding.ASCII.GetBytes($"{apiKey}:"));
-
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authValue);
+            _repository = repository;
         }
 
-        public async Task<List<Job>> GetJobsAsync(string keyword, string location)
+        public Task<List<Job>> GetJobsAsync(string keyword, string location)
         {
-            var response = await _httpClient
-                .GetAsync($"search?keywords={Uri.EscapeDataString(keyword)}&locationName={Uri.EscapeDataString(location)}");
-
-
-            response.EnsureSuccessStatusCode();
-
-            using var stream = await response.Content.ReadAsStreamAsync();
-            using var json = await JsonDocument.ParseAsync(stream);
-
-            var results = json.RootElement
-                .GetProperty("results");
-
-            var jobs = new List<Job>();
-
-            foreach (var item in results.EnumerateArray())
-            {
-                jobs.Add(new Job(
-                    item.GetProperty("jobTitle").GetString() ?? "",
-                    item.GetProperty("employerName").GetString() ?? "",
-                    item.GetProperty("locationName").GetString() ?? "",
-                    item.GetProperty("jobDescription").GetString() ?? "",
-                    item.GetProperty("jobUrl").GetString() ?? ""
-                ));
-            }
-            return jobs;
+            return _repository.GetJobsAsync(keyword, location);
         }
     }
+
 }
