@@ -31,5 +31,11 @@ namespace firstDoorBackEnd.Middleware
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
             await context.Response.WriteAsJsonAsync(ex.Message);
         }
+
+        private async Task HandleGenericException(HttpContext context, Exception ex)
+        {
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            await context.Response.WriteAsJsonAsync(new { message = "firstDoor encountered an unexpected error :(" });
+        }
     }
 }
