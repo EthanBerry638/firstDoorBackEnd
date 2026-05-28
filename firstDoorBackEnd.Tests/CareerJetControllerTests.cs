@@ -28,11 +28,15 @@ public class CareerJetControllerTests
             new("software engineer", "microsoft", "london", ".NET developer", "test url")
         };
 
-        mockCareerJetService.Setup(s => s.GetAllJobsAsync("string", "string")).ReturnsAsync(jobs);
+        mockCareerJetService.Setup(s => s.GetAllJobsAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(jobs);
 
-        var result = await _careerJetController.GetAllJobsAsync("string", "string");
-        var okResult = result as Microsoft.AspNetCore.Mvc.OkObjectResult;
+        _careerJetController.ControllerContext = new ControllerContext
+        {
+            HttpContext = _httpContext
+        };
 
+        var result = await _careerJetController.GetAllJobsAsync();
+        var okResult = result as OkObjectResult;
 
         Assert.IsInstanceOf<OkObjectResult>(result);
         Assert.That(jobs, Is.EqualTo(okResult!.Value));
@@ -43,9 +47,14 @@ public class CareerJetControllerTests
     {
         var jobs = new List<Job>();
 
-        mockCareerJetService.Setup(s => s.GetAllJobsAsync("string", "string")).ReturnsAsync(jobs);
+        mockCareerJetService.Setup(s => s.GetAllJobsAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(jobs);
 
-        var result = await _careerJetController.GetAllJobsAsync("string", "string");
+        _careerJetController.ControllerContext = new ControllerContext
+        {
+            HttpContext = _httpContext
+        };
+
+        var result = await _careerJetController.GetAllJobsAsync();
         var okResult = result as OkObjectResult;
 
         Assert.IsInstanceOf<OkObjectResult>(result);
@@ -55,25 +64,6 @@ public class CareerJetControllerTests
     [Test]
     public async Task GetUserIPAndUserAgent_ReturnsUserIpAndUserAgent()
     {
-        var httpContext = new DefaultHttpContext();
-        httpContext.Connection.RemoteIpAddress = System.Net.IPAddress.Parse("127.0.0.1");
-        httpContext.Request.Headers["User-Agent"] = "Mozilla/5.0";
-
-        _careerJetController.ControllerContext = new ControllerContext()
-        {
-            HttpContext = httpContext
-        };
-
-        var result = _careerJetController.GetUserIPAndUserAgent();
-
-        Assert.That(result.Item1, Is.EqualTo("127.0.0.1"));
-        Assert.That(result.Item2, Is.EqualTo("Mozilla/5.0"));
-    }
-
-    [Test]
-    public async Task GetUserIPAndUserAgent_ReturnsEmptyStrings_WhenValuesAreMissing()
-    {
-
         _httpContext.Connection.RemoteIpAddress = System.Net.IPAddress.Parse("127.0.0.1");
         _httpContext.Request.Headers["User-Agent"] = "Mozilla/5.0";
 
