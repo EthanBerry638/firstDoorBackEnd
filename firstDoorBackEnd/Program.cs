@@ -1,3 +1,4 @@
+using firstDoorBackEnd.Services;
 using firstDoorBackEnd.Repositories;
 using firstDoorBackEnd.Middleware;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -27,7 +28,9 @@ builder.Services.AddHttpClient<ICareerJetRepository, CareerJetRepository>(client
 });
 
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHttpClient<IReedService, ReedService>();
 builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
 
 builder.Services.AddHealthChecks()
     .AddUrlGroup(
@@ -64,5 +67,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.MapControllers();
 
 app.Run();
