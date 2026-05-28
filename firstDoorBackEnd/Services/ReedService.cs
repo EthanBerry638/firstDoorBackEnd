@@ -1,5 +1,7 @@
 ﻿using firstDoorBackEnd.Models;
 using System.Net.Http.Headers;
+using firstDoorBackEnd.Repositories;
+
 namespace firstDoorBackEnd.Services
 {
     public class ReedService : IReedService
@@ -13,7 +15,7 @@ namespace firstDoorBackEnd.Services
 
         public Task<List<Job>> GetJobsAsync(string keyword, string location)
         {
-            return _repository.GetJobsAsync(keyword, location);
+            return _repository.GetAllJobsAsync(keyword, location);
         }
     }
 
