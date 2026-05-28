@@ -8,14 +8,12 @@ namespace firstDoorBackEnd.Tests
     public class CareerJetServiceTests
     {
         private CareerJetService _careerJetService;
-        private Mock<HttpClient> _mockHttpClient;
-        private Mock<CareerJetRepository> _mockCareerJetRepository;
+        private Mock<ICareerJetRepository> _mockCareerJetRepository;
 
         [SetUp]
         public void SetUp()
         {
-            _mockHttpClient = new Mock<HttpClient>();
-            _mockCareerJetRepository = new Mock<CareerJetRepository>(_mockHttpClient.Object);
+            _mockCareerJetRepository = new Mock<ICareerJetRepository>();
             _careerJetService = new CareerJetService(_mockCareerJetRepository.Object);
         }
 
