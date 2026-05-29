@@ -118,5 +118,25 @@ namespace firstDoorBackEnd.Tests
 
             Assert.That(content.Contains("The API key or credentials provided are invalid"));
         }
+
+        [Test]
+        public async Task GetAllJobsEndpoint_ShouldReturnBadRequest_WhenRepositoryThrowsBadRequestException()
+        {
+            var client = _factory.WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureTestServices(services =>
+                {
+                    var mockRepo = new Mock<ICareerJetRepository>();
+
+                    mockRepo.Setup(repo => repo.GetAllJobsAsync(It.IsAny<string>(), It.IsAny<string>())).ThrowsAsync(new CareerJetBadRequestException());
+
+                    services.AddScoped(_ => mockRepo.Object);
+                });
+            }).CreateClient();
+
+            var response = await client.GetAsync("CareerJet");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        }
     }
 }
