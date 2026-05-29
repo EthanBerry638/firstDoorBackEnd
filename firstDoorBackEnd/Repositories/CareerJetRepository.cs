@@ -1,5 +1,5 @@
-﻿using firstDoorBackEnd.Models;
-using firstDoorBackEnd.Exceptions;
+﻿using firstDoorBackEnd.Exceptions;
+using firstDoorBackEnd.Models;
 
 namespace firstDoorBackEnd.Repositories
 {
@@ -23,9 +23,18 @@ namespace firstDoorBackEnd.Repositories
 
             if (response.IsSuccessStatusCode)
             {
+                List<Job> jobs = new List<Job>();
                 var jobResponse = await response.Content.ReadFromJsonAsync<CareerJetResponse>();
-                return jobResponse?.jobs ?? new List<Job>();
+
+                for (int i = 0; i < jobResponse.jobs.Count; i++)
+                {
+                    var job = ConvertToJob(jobResponse!.jobs![i]);
+                    jobs.Add(job);
+                }
+
+                return jobs;
             }
+
 
             if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
@@ -40,6 +49,17 @@ namespace firstDoorBackEnd.Repositories
             }
 
             return new List<Job>();
+        }
+
+        private Job ConvertToJob(CareerJetJob careerJetJob)
+        {
+            return new Job(
+                careerJetJob.Title ?? string.Empty,
+                careerJetJob.Company ?? string.Empty,
+                careerJetJob.Locations ?? string.Empty,
+                careerJetJob.Description ?? string.Empty,
+                careerJetJob.Url ?? string.Empty
+            );
         }
     }
 }
