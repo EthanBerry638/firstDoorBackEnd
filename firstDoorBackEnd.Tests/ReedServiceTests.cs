@@ -37,4 +37,5 @@ public class ReedServiceTests
             r => r.GetAllJobsAsync("developer", "London"),
             Times.Once);
     }
+
 }
