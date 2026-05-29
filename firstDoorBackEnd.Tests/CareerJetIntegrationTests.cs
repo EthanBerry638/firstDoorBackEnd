@@ -62,5 +62,36 @@ namespace firstDoorBackEnd.Tests
 
             Assert.That(jobs, Is.EqualTo(expectedList));
         }
+
+        [Test]
+        public async Task GetAllJobsEndpoint_ShouldReturnEmptyListOfJobs_WhenRepositoryReturnsListOfJobs()
+        {
+            var expectedList = new List<Job>();
+
+            var client = _factory.WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureTestServices(services =>
+                {
+                    var mockRepo = new Mock<ICareerJetRepository>();
+
+                    mockRepo.Setup(repo => repo.GetAllJobsAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(expectedList);
+
+                    services.AddScoped(_ => mockRepo.Object);
+                });
+            }).CreateClient();
+
+            var response = await client.GetAsync("CareerJet");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            var jobs = JsonSerializer.Deserialize<List<Job>>(content, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            Assert.That(jobs, Is.EqualTo(expectedList));
+        }
     }
 }
