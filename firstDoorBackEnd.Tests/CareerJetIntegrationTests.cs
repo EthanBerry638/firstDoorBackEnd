@@ -72,7 +72,7 @@ namespace firstDoorBackEnd.Tests
         }
 
         [Test]
-        public async Task GetAllJobsEndpoint_ShouldReturnEmptyListOfJobs_WhenRepositoryReturnsListOfJobs()
+        public async Task GetAllJobsEndpoint_ShouldReturnEmptyListOfJobs_WhenRepositoryReturnsEmpty()
         {
             var expectedList = new List<CareerJetJob>();
 
